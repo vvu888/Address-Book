@@ -1,5 +1,8 @@
-package com.example.addressbook;
+package com.example.addressbook.controller;
+import com.example.addressbook.model.SqliteContactDAO;
 
+import com.example.addressbook.model.Contact;
+import com.example.addressbook.model.IContactDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -25,8 +28,10 @@ public class MainController {
     private TextField phoneTextField;
 
     public MainController() {
-        contactDAO = new MockContactDAO();
-        contactDAO.addContact(new Contact("Jerry","Doe","jerrydoe@example.com","0423423426"));
+//        contactDAO = new MockContactDAO();
+//        contactDAO.addContact(new Contact("Jerry","Doe","jerrydoe@example.com","0423423426"));
+
+        contactDAO = new SqliteContactDAO();
     }
 
     /**

@@ -1,5 +1,9 @@
-package com.example.addressbook;
+package com.example.addressbook.model;
 
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +13,7 @@ public class MockContactDAO implements IContactDAO {
      */
     public static final ArrayList<Contact> contacts = new ArrayList<>();
     private static int autoIncrementedId = 0;
+    private Connection connection;
 
     public MockContactDAO() {
         // Add some initial contacts to the mock database
@@ -19,9 +24,21 @@ public class MockContactDAO implements IContactDAO {
 
     @Override
     public void addContact(Contact contact) {
-        contact.setId(autoIncrementedId);
-        autoIncrementedId++;
-        contacts.add(contact);
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO contacts (firstName, lastName, phone, email) VALUES (?, ?, ?, ?)");
+            statement.setString(1, contact.getFirstName());
+            statement.setString(2, contact.getLastName());
+            statement.setString(3, contact.getPhone());
+            statement.setString(4, contact.getEmail());
+            statement.executeUpdate();
+            // Set the id of the new contact
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                contact.setId(generatedKeys.getInt(1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
